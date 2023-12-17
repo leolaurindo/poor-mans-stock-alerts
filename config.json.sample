@@ -1,0 +1,7 @@
+{
+    "check_period_months": 4,
+    "drawdown_threshold": -22.5,
+    "recovery_threshold": 10,
+    "moving_average_window": 20,
+    "moving_average_alert_days": 3
+}

@@ -1,0 +1,8 @@
+logs/
+price_history.json
+config.json
+alerts/*.txt
+tickers.txt
+__pycache__/*
+README-2.md
+README-3.md
