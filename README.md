@@ -16,9 +16,8 @@ Today, the script is hardcoded to handle data from 4 months old. It deletes data
     - You can `pip install -r requirements.txt`
 - A `tickers.txt` file for initial ticker setup. Write the tickers as in the `tickers.txt.sample`, with line breaks, and following yahoo finance's standard.
 - A `config.json` as in the `config.json.sample`. It should have the keys
-
-"check_period_months": 4,
-"drawdown_threshold": -22.5,
-"recovery_threshold": 10,
-"moving_average_window": 20,
-"moving_average_alert_days": 3
+    - "check_period_months": which sets how many months the code will check for drawdowns (don't set higher than 4 months yet, as the script is hardcoded to erase data older than four months)
+    - "drawdown_threshold": which should be a negative float or interger value indicating the amount of drawdown percentage the code will search
+    - "recovery_threshold": which should be a positive float or integer value  indicating the amount percentage growth in price will be considered "recovered"
+    - "moving_average_window": which should be an integer of days on top of which the script will calculate the moving averages
+    - "moving_average_alert_days": which should be an integer of days that the script will consider when alerting about the moving average and price lines crossing (e.g.: if the lines crossed in the last 3 days, it will alert)
