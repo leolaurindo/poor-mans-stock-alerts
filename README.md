@@ -1,4 +1,4 @@
-# Stock Price Alert
+# Poor Man's Stock Price Alert
 
 ## Project Overview
 This project consists of scripts for tracking the stock prices of specified tickers. It includes functionalities for fetching historical data, daily updates and setting price alerts according to some monitoring rules.
