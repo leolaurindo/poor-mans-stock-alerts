@@ -86,7 +86,7 @@ def main():
                                 config['check_period_months'],
                                 config['drawdown_threshold'],
                                 config['recovery_threshold']):
-                alert_message = f"ALERT: {ticker} has hit the drawdown/recovery criteria."
+                alert_message = f"ALERT: {ticker} has hit the drawdown criteria."
                 logging.info(alert_message)
                 print(alert_message)
                 if ticker not in alerted_tickers:
@@ -96,7 +96,7 @@ def main():
             if len(price_data) >= config['moving_average_window']:
                 moving_avg = calculate_moving_average(np.array(price_data), config['moving_average_window'])
                 if check_crossing(np.array(price_data), moving_avg, config['moving_average_alert_days']):
-                    alert_message = f"ALERT: Price and Moving Average crossed for {ticker}."
+                    alert_message = f"ALERT: Price and {config['moving_average_window']} days Moving Average crossed for {ticker} in the last {config['moving_average_alert_days']} days."
                     logging.info(alert_message)
                     print(alert_message)
                     log_crossing(ticker)

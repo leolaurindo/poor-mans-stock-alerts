@@ -17,6 +17,7 @@ def check_drawdowns(ticker, history, check_period_months, drawdown_threshold, re
     end_date = df.index[-1]
     start_date = end_date - pd.DateOffset(months=check_period_months)
     drawdown_detected = False
+    recovery_after_drawdown = False
 
     for date, row in df.loc[start_date:end_date].iterrows():
         for past_date, past_row in df.loc[start_date:date].iterrows():
@@ -24,10 +25,14 @@ def check_drawdowns(ticker, history, check_period_months, drawdown_threshold, re
 
             if drawdown <= drawdown_threshold:
                 drawdown_detected = True
-            elif drawdown_detected and drawdown > recovery_threshold:
-                return True
+                # Reset recovery flag whenever a new drawdown is detected
+                recovery_after_drawdown = False
 
-    return drawdown_detected
+            if drawdown_detected and drawdown > recovery_threshold:
+                # Recovery detected after a drawdown
+                recovery_after_drawdown = True
+
+    return drawdown_detected and not recovery_after_drawdown
 
 def check_all_tickers(history, check_period_months, drawdown_threshold, recovery_threshold):
     results = {}
