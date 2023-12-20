@@ -78,9 +78,6 @@ def main():
             if ticker not in history:
                 history[ticker] = []
 
-            # if not any(entry['Date'] == today.isoformat() for entry in history[ticker]):
-            #     history[ticker].append({'Date': today.isoformat(), 'Price': price})
-
             if check_drawdowns(ticker,
                                 history,
                                 config['check_period_months'],
