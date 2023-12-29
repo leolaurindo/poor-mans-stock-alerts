@@ -6,7 +6,7 @@ import datetime
 import numpy as np
 import pandas as pd
 from drawdown_check import check_drawdowns
-from moving_average import calculate_moving_average, check_crossing, log_crossing, plot_data  # Importing from moving_average.py
+# from moving_average import calculate_moving_average, check_crossing, log_crossing, plot_data  # Importing from moving_average.py
 from pathlib import Path
 
 with open('config.json') as config_file:
@@ -52,11 +52,11 @@ def save_price_history(history):
 
 def plot_data_from_history(ticker, history, window_size):
     price_data = history.get(ticker, [])
-    if price_data:
-        prices = [day['Price'] for day in price_data]
-        dates = [day['Date'] for day in price_data]
-        moving_averages = calculate_moving_average(np.array(prices), window_size)
-        plot_data(ticker, prices, moving_averages, dates, window_size)
+    # if price_data:
+    #     prices = [day['Price'] for day in price_data]
+    #     dates = [day['Date'] for day in price_data]
+    #     moving_averages = calculate_moving_average(np.array(prices), window_size)
+    #     plot_data(ticker, prices, moving_averages, dates, window_size)
 
 def main():
 
@@ -90,17 +90,17 @@ def main():
                     alerted_tickers.append(ticker)
 
             price_data = [entry['Price'] for entry in history[ticker]]
-            if len(price_data) >= config['moving_average_window']:
-                moving_avg = calculate_moving_average(np.array(price_data), config['moving_average_window'])
-                if check_crossing(np.array(price_data), moving_avg, config['moving_average_alert_days']):
-                    alert_message = f"ALERT: Price and {config['moving_average_window']} days Moving Average crossed for {ticker} in the last {config['moving_average_alert_days']} days."
-                    logging.info(alert_message)
-                    print(alert_message)
-                    log_crossing(ticker)
+            # if len(price_data) >= config['moving_average_window']:
+            #     moving_avg = calculate_moving_average(np.array(price_data), config['moving_average_window'])
+            #     if check_crossing(np.array(price_data), moving_avg, config['moving_average_alert_days']):
+            #         alert_message = f"ALERT: Price and {config['moving_average_window']} days Moving Average crossed for {ticker} in the last {config['moving_average_alert_days']} days."
+            #         logging.info(alert_message)
+            #         print(alert_message)
+            #         log_crossing(ticker)
 
-                    # Add ticker to alerted list if not already present
-                    if ticker not in alerted_tickers:
-                        alerted_tickers.append(ticker)
+            #         # Add ticker to alerted list if not already present
+            #         if ticker not in alerted_tickers:
+            #             alerted_tickers.append(ticker)
 
             # Remove data older than 4 months
             four_months_ago = today - pd.DateOffset(months=4)
@@ -110,22 +110,22 @@ def main():
         logging.info("Daily price update completed successfully.")
         print("Daily price update completed successfully.")
 
-        if args.chart and alerted_tickers:
-            print("Would you like to open the chart for the alerted tickers? (close this console if not)")
-            print("0. Open all")
-            for i, ticker in enumerate(alerted_tickers, start=1):
-                print(f"{i}. {ticker}")
+        # if args.chart and alerted_tickers:
+        #     print("Would you like to open the chart for the alerted tickers? (close this console if not)")
+        #     print("0. Open all")
+        #     for i, ticker in enumerate(alerted_tickers, start=1):
+        #         print(f"{i}. {ticker}")
 
-            choice = input("Enter your choice (number): ")
-            try:
-                choice = int(choice)
-                if choice == 0:
-                    for ticker in alerted_tickers:
-                        plot_data_from_history(ticker, history, config['moving_average_window'])
-                elif 1 <= choice <= len(alerted_tickers):
-                    plot_data_from_history(alerted_tickers[choice - 1], history, config['moving_average_window'])
-            except ValueError:
-                print("Invalid input. No charts will be opened.")
+        #     choice = input("Enter your choice (number): ")
+        #     try:
+        #         choice = int(choice)
+        #         if choice == 0:
+        #             for ticker in alerted_tickers:
+        #                 plot_data_from_history(ticker, history, config['moving_average_window'])
+        #         elif 1 <= choice <= len(alerted_tickers):
+        #             plot_data_from_history(alerted_tickers[choice - 1], history, config['moving_average_window'])
+        #     except ValueError:
+        #         print("Invalid input. No charts will be opened.")
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")

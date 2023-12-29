@@ -6,3 +6,4 @@ tickers.txt
 __pycache__/*
 README-2.md
 README-3.md
+moving_average.py

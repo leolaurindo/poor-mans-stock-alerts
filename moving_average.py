@@ -11,15 +11,45 @@ with open('config.json') as config_file:
     
 def calculate_moving_average(prices, window_size):
     """Calculate the moving average using a specified window size."""
+    if len(prices) < window_size:
+        return []  # Not enough data to calculate moving average
     return np.convolve(prices, np.ones(window_size), 'valid') / window_size
 
 def check_crossing(prices, moving_averages, alert_days):
-    """Check if the price and moving average crossed in the last alert_days."""
-    for i in range(1, alert_days + 1):
-        if (prices[-i] > moving_averages[-i] and prices[-i-1] <= moving_averages[-i-1]) or \
-           (prices[-i] < moving_averages[-i] and prices[-i-1] >= moving_averages[-i-1]):
-            return True
-    return False
+    """
+    Check if the price and moving average crossed at any point within the last alert_days.
+    A crossing is defined as the price moving from one side of the MA to the other between two consecutive days.
+    """
+    # Ensure we have enough data points
+    if len(prices) < alert_days + 1 or len(moving_averages) < alert_days:
+        return False
+
+    # Starting index for the moving averages considering their shorter length due to the window size
+    ma_start_index = len(prices) - len(moving_averages)
+
+    # Loop through the specified number of alert_days
+    for i in range(alert_days, 0, -1):
+        # Indices for the price and moving average on the current and previous day
+        price_today_idx = -i
+        price_yesterday_idx = price_today_idx - 1
+        ma_today_idx = price_today_idx + ma_start_index
+        ma_yesterday_idx = price_yesterday_idx + ma_start_index
+
+        # Ensure the indices are within the range of the moving averages list
+        if ma_yesterday_idx < 0:
+            continue
+
+        # Check for crossing
+        price_today = prices[price_today_idx]
+        price_yesterday = prices[price_yesterday_idx]
+        ma_today = moving_averages[ma_today_idx]
+        ma_yesterday = moving_averages[ma_yesterday_idx]
+
+        crossed = (price_today > ma_today) != (price_yesterday > ma_yesterday)
+        if crossed:
+            return True  # A crossing has occurred
+
+    return False  # No crossing occurred within the alert_days
 
 def log_crossing(ticker):
     """Log the crossing event to a file."""
